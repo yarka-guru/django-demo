@@ -46,7 +46,8 @@ memory: 256
 #   project: project-name
 
 # You can override any of the values defined above by environment.
-# environments:
-#   test:
-#     variables:
-#       LOG_LEVEL: debug        # Log level for the "test" environment.
+environments:
+  test:
+    variables:
+      # LOG_LEVEL: debug        # Log level for the "test" environment.
+      ALLOWED_HOSTS: https://3wu2imam5y.ap-northeast-1.awsapprunner.com
