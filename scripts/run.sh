@@ -1,5 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
-# Run the command
 gunicorn -b :80 --chdir /app app.wsgi:application

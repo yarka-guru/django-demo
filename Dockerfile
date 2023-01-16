@@ -1,10 +1,11 @@
 FROM python:3.11.1-alpine3.17 AS build
 
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /requirements.txt
 
-RUN apk add --update --no-cache postgresql-client build-base postgresql-dev
+RUN apk add --update --no-cache postgresql-client build-base postgresql-dev \
+                                musl-dev zlib zlib-dev linux-headers
 
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
@@ -12,21 +13,21 @@ RUN python -m venv /py && \
 
 FROM python:3.11.1-alpine3.17
 
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED 1
 
 COPY --from=build /py /py
 
 RUN apk add --update --no-cache postgresql-client
 
-RUN adduser -D user
-USER user
+RUN mkdir /app
+RUN mkdir /scripts
 
-COPY --chown=user:user ./scripts /scripts
-RUN chmod +x /scripts/*
+COPY ./scripts /scripts
+RUN chmod -R +x /scripts
 
-ENV PATH="/scripts:py/bin:$PATH"
+ENV PATH="/scripts:/py/bin:$PATH"
 
-COPY --chown=user:user ./app /app
+COPY ./app /app
 WORKDIR /app
 
 EXPOSE 80
